@@ -11,6 +11,7 @@ import 'package:english_card/values/app_colors.dart';
 import 'package:english_card/values/app_styles.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:like_button/like_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../values/share_keys.dart';
@@ -193,10 +194,37 @@ class _HomePageState extends State<HomePage> {
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  child: Image.asset(AppAssets.heart),
+                                LikeButton(
+                                  onTap: (bool isLiked) async {
+                                    setState(() {
+                                      words[index].isFavorite =
+                                          !words[index].isFavorite;
+                                    });
+                                    return words[index].isFavorite;
+                                  },
+                                  isLiked: words[index].isFavorite,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  size: 42,
+                                  circleColor: const CircleColor(
+                                      start: Color(0xff00ddff),
+                                      end: Color(0xff0099cc)),
+                                  bubblesColor: const BubblesColor(
+                                    dotPrimaryColor: Color(0xff33b5e5),
+                                    dotSecondaryColor: Color(0xff0099cc),
+                                  ),
+                                  likeBuilder: (bool isLiked) {
+                                    return ImageIcon(
+                                      const AssetImage(AppAssets.heart),
+                                      color:
+                                          isLiked ? Colors.red : Colors.white,
+                                      size: 42,
+                                    );
+                                  },
                                 ),
+                                // Container(
+                                //   alignment: Alignment.centerRight,
+                                //   child: Image.asset(AppAssets.heart),
+                                // ),
                                 RichText(
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -321,7 +349,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildIndicator(bool isActive, Size size) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.linear,
       height: 8,
       margin: const EdgeInsets.symmetric(horizontal: 12),
       width: isActive ? size.width * 1 / 5 : 24,
