@@ -4,7 +4,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:english_card/models/english_today.dart';
 import 'package:english_card/packages/quote/quote.dart';
 import 'package:english_card/packages/quote/quote_model.dart';
-import 'package:english_card/pages/all_words_page.dart';
 import 'package:english_card/pages/control_page.dart';
 import 'package:english_card/values/app_assets.dart';
 import 'package:english_card/values/app_colors.dart';
@@ -150,40 +149,52 @@ class _HomePageState extends State<HomePage> {
 
                   return Padding(
                     padding: const EdgeInsets.all(4),
-                    child: Material(
-                      borderRadius: const BorderRadius.all(Radius.circular(24)),
-                      color: AppColors.primaryColor,
-                      elevation: 4,
-                      child: InkWell(
-                        onDoubleTap: () {
-                          setState(() {
-                            words[index].isFavorite = !words[index].isFavorite;
-                          });
-                        },
-                        splashColor: Colors.transparent,
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: Image.asset(
-                                  AppAssets.heart,
-                                  color: words[index].isFavorite
-                                      ? Colors.red
-                                      : Colors.white,
-                                ),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: const BoxDecoration(
+                        color: AppColors.primaryColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(3, 6),
+                            blurRadius: 6,
+                          )
+                        ],
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(24),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: Image.asset(AppAssets.heart),
+                          ),
+                          RichText(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                            text: TextSpan(
+                              text: firstLetter,
+                              style: TextStyle(
+                                fontFamily: FontFamily.sen,
+                                fontSize: 89,
+                                fontWeight: FontWeight.bold,
+                                shadows: const [
+                                  BoxShadow(
+                                    color: Colors.black38,
+                                    offset: Offset(3, 6),
+                                    blurRadius: 6,
+                                  )
+                                ],
                               ),
-                              RichText(
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                text: TextSpan(
-                                  text: firstLetter,
+                              children: [
+                                TextSpan(
+                                  text: leftLetter,
                                   style: TextStyle(
                                     fontFamily: FontFamily.sen,
-                                    fontSize: 89,
+                                    fontSize: 56,
                                     fontWeight: FontWeight.bold,
                                     shadows: const [
                                       BoxShadow(
@@ -193,65 +204,46 @@ class _HomePageState extends State<HomePage> {
                                       )
                                     ],
                                   ),
-                                  children: [
-                                    TextSpan(
-                                      text: leftLetter,
-                                      style: TextStyle(
-                                        fontFamily: FontFamily.sen,
-                                        fontSize: 56,
-                                        fontWeight: FontWeight.bold,
-                                        shadows: const [
-                                          BoxShadow(
-                                            color: Colors.black38,
-                                            offset: Offset(3, 6),
-                                            blurRadius: 6,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 24),
-                                child: AutoSizeText(
-                                  '"$quote"',
-                                  maxLines: 6,
-                                  style: AppStyles.h4.copyWith(
-                                    letterSpacing: 1,
-                                    color: AppColors.textColor,
-                                  ),
-                                ),
-                              )
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 24),
+                            child: AutoSizeText(
+                              '"$quote"',
+                              maxLines: 6,
+                              style: AppStyles.h4.copyWith(
+                                letterSpacing: 1,
+                                color: AppColors.textColor,
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   );
                 },
               ),
             ),
-            _currentIndex >= 5
-                ? buildShowMore()
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: SizedBox(
-                      height: size.height * 1 / 11,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 24),
-                        alignment: Alignment.center,
-                        child: ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 5,
-                          itemBuilder: (context, index) {
-                            return buildIndicator(index == _currentIndex, size);
-                          },
-                        ),
-                      ),
-                    ),
-                  )
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: SizedBox(
+                height: size.height * 1 / 11,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  alignment: Alignment.center,
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 5,
+                    itemBuilder: (context, index) {
+                      return buildIndicator(index == _currentIndex, size);
+                    },
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -303,9 +295,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildIndicator(bool isActive, Size size) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInToLinear,
+    return Container(
       height: 8,
       margin: const EdgeInsets.symmetric(horizontal: 12),
       width: isActive ? size.width * 1 / 5 : 24,
@@ -321,34 +311,6 @@ class _HomePageState extends State<HomePage> {
               blurRadius: 3,
             )
           ]),
-    );
-  }
-
-  Widget buildShowMore() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      alignment: Alignment.centerLeft,
-      child: Material(
-        elevation: 4,
-        borderRadius: const BorderRadius.all(Radius.circular(24)),
-        color: AppColors.primaryColor,
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => AllWordsPage(words: words)),
-            );
-          },
-          borderRadius: const BorderRadius.all(Radius.circular(24)),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            child: Text(
-              'Show more',
-              style: AppStyles.h5,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
